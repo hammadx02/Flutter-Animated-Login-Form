@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rive/rive.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -17,13 +18,14 @@ class _LoginScreenState extends State<LoginScreen> {
   SMIBool? isHandsUp, isChecking;
   SMINumber? numLook;
 
+  bool _isChecked = false;
+
   StateMachineController? stateMachineController;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     animationURL = defaultTargetPlatform == TargetPlatform.android ||
             defaultTargetPlatform == TargetPlatform.iOS
@@ -38,12 +40,12 @@ class _LoginScreenState extends State<LoginScreen> {
         if (stateMachineController != null) {
           artboard.addController(stateMachineController!);
 
-          stateMachineController!.inputs.forEach((e) {
+          for (var e in stateMachineController!.inputs) {
             debugPrint(e.runtimeType.toString());
             debugPrint("name${e.name}End");
-          });
+          }
 
-          stateMachineController!.inputs.forEach((element) {
+          for (var element in stateMachineController!.inputs) {
             if (element.name == "trigSuccess") {
               successTrigger = element as SMITrigger;
             } else if (element.name == "trigFail") {
@@ -55,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             } else if (element.name == "numLook") {
               numLook = element as SMINumber;
             }
-          });
+          }
         }
 
         setState(() => _teddyArtboard = artboard);
@@ -80,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void login() {
     isChecking?.change(false);
     isHandsUp?.change(false);
-    if (_emailController.text == "admin" &&
+    if (_emailController.text == "admin@gmail.com" &&
         _passwordController.text == "admin") {
       successTrigger?.fire();
     } else {
@@ -112,8 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: const EdgeInsets.only(bottom: 15 * 4),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 children: [
@@ -127,10 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: lookOnTheTextField,
                           onChanged: moveEyeBalls,
                           keyboardType: TextInputType.emailAddress,
-                          style: const TextStyle(fontSize: 14),
+                          style: GoogleFonts.poppins(fontSize: 14),
                           cursorColor: const Color(0xffb04863),
                           decoration: const InputDecoration(
-                            hintText: "Email/Username",
+                            hintText: "Email",
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius:
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color(0xffb04863),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                           ),
                         ),
@@ -152,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: handsOnTheEyes,
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
-                          style: const TextStyle(fontSize: 14),
+                          style: GoogleFonts.poppins(fontSize: 14),
                           cursorColor: const Color(0xffb04863),
                           decoration: const InputDecoration(
                             hintText: "Password",
@@ -176,14 +177,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            //remember me checkbox
                             Row(
                               children: [
                                 Checkbox(
-                                  value: false,
-                                  onChanged: (value) {},
+                                  activeColor: const Color(0xffb04863),
+                                  value: _isChecked,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isChecked = value!;
+                                    });
+                                  },
                                 ),
-                                const Text("Remember me"),
+                                Text(
+                                  "Remember me",
+                                  style: GoogleFonts.poppins(),
+                                ),
                               ],
                             ),
                             ElevatedButton(
@@ -191,7 +199,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xffb04863),
                               ),
-                              child: const Text("Login", style: TextStyle(color: Colors.white),),
+                              child: Text(
+                                "Login",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ],
                         ),
